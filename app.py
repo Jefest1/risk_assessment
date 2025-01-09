@@ -78,9 +78,23 @@ with tab3:
                     updated_data.strip('```json').strip('```')))
                 updated_data['Risk Score'] = updated_data['Likelihood Score'] * \
                     data['Impact Score']
-                st.dataframe(updated_data.style.applymap(
-                    lambda x: 'background-color: #d1fae5' if x <= 5 else 'background-color: #fef3c7' if x <= 10 else 'background-color: #facc15' if x <= 15 else 'background-color: #f87171' if x <= 20 else 'background-color: #991b1b',
-                    subset=['Risk Score']))
+                # Calculate Calibrated Risk Score (1-5 scale)
+
+                def calibrate_risk_score(score):
+                    if 1 <= score <= 5:
+                        return 1  # lower risk
+                    elif 6 <= score <= 10:
+                        return 2  # low risk
+                    elif 11 <= score <= 15:
+                        return 3  # medium risk
+                    elif 16 <= score <= 20:
+                        return 4  # high risk
+                    else:  # 21-25
+                        return 5  # extreme risk
+
+                updated_data['Calibrated Risk Score'] = updated_data['Risk Score'].apply(
+                    calibrate_risk_score)
+                st.dataframe(updated_data)
             else:
                 st.error("Failed to process data with LLM.")
 
