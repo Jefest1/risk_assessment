@@ -1,13 +1,13 @@
-# from huggingface_hub import InferenceClient
-from openai import OpenAI
+from huggingface_hub import InferenceClient
+# from openai import OpenAI
 from config import settings
 import streamlit as st
 import pandas as pd
 
 
 class LLMHandler:
-    def __init__(self, api_key=settings.OPENAI_API_KEY, model=settings.GPT_MODEL):
-        self.client = OpenAI(api_key=api_key)
+    def __init__(self, api_key=settings.HF_TOKEN, model=settings.META_MODEL):
+        self.client = InferenceClient(token=api_key)
         self.model = model
 
     def generate_prompt(self, data_json):
@@ -17,7 +17,7 @@ class LLMHandler:
         return (
             "Analyze the provided 'Lower Limit', 'Upper Limit', and 'Response Level' for each row "
             "and add one new field to the data: 'Likelihood' (a single digit from 1 to 5) . "
-            "Return only the updated data as a JSON object without any additional text or formatting.\n\n"
+            "Return only the first eight rows updated data as a JSON object without any additional text or formatting.\n\n"
             f"Data: {data_json}"
         )
 
@@ -29,7 +29,7 @@ class LLMHandler:
         prompt = self.generate_prompt(data_json)
         messages = [
             {'role': 'system',
-                'content': "You are an AI assistant specialized in risk assessment. Your task is to analyze the provided 'Lower Limit', 'Upper Limit', and 'Response Level' for each row of data and add one new field: 'Likelihood score' (a single digit from 1 to 5) Return only the updated data as a JSON object without any additional text or formatting."},
+                'content': "You are an AI assistant specialized in risk assessment. Your task is to analyze the provided 'Lower Limit', 'Upper Limit', and 'Response Level' for each row of data and add one new field: 'Likelihood score' (a single digit from 1 to 5) Return only the first eight rows updated data as a JSON object without any additional text or formatting."},
             {"role": "user", "content": prompt}
         ]
 
@@ -37,6 +37,7 @@ class LLMHandler:
             completion = self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
+                max_tokens=1290,
             )
 
             # Directly read the returned JSON into a DataFrame
