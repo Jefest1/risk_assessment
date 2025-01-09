@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     GPT_MODEL: str
     PHI_MODEL: str
     META_MODEL: str
+    CLAUDE: str
+    CLAUDE_API_KEY: str
 
     model_config = SettingsConfigDict(env_file='.env')
 

@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from model import llm_handler
 from config import settings
+import numpy as np
 import json
 
 # Custom CSS for Tailwind
@@ -58,6 +59,8 @@ if uploaded_file is not None:
             missing_columns = [
                 col for col in required_columns if col not in data.columns]
             data = data[required_columns]
+            # Add a new column for impact score with random values between 1 and 5
+            data['Impact Score'] = np.random.randint(1, 6, size=len(data))
         # Display uploaded data
         st.write("### Uploaded Data")
         st.dataframe(data.head())
@@ -68,9 +71,12 @@ if uploaded_file is not None:
 
         if updated_data is not None:
             st.success("Data processed successfully!")
-            st.write("### Updated Data with Likelihood and Reasons")
-            st.dataframe(json.loads(
+            st.write("### Updated Data with Likelihood and risk score")
+            updated_data = pd.DataFrame(json.loads(
                 updated_data.strip('```json').strip('```')))
+            updated_data['Risk Score'] = updated_data['Likelihood Score'] * \
+                data['Impact Score']
+            st.dataframe(updated_data)
         else:
             st.error("Failed to process data with LLM.")
 

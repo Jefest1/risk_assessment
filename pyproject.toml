@@ -21,6 +21,7 @@ bitsandbytes = "^0.45.0"
 accelerate = "^1.2.1"
 fastapi = {extras = ["standard"], version = "^0.115.6"}
 openai = "^1.59.4"
+anthropic = "^0.42.0"
 
 
 [build-system]
