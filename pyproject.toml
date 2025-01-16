@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "risk-assessment"
+version = "0.1.0"
+description = "A project to create a poc for a risk assessment saas platform for companies"
+authors = ["Jefest1 <anyanf101@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pandas = "^2.2.3"
+numpy = "^2.2.1"
+streamlit = "^1.41.1"
+plotly = "^5.24.1"
+openpyxl = "^3.1.5"
+huggingface-hub = "^0.27.1"
+pydantic = "^2.10.4"
+pydantic-settings = "^2.7.1"
+transformers = "^4.47.1"
+torch = "^2.5.1"
+bitsandbytes = "^0.45.0"
+accelerate = "^1.2.1"
+fastapi = {extras = ["standard"], version = "^0.115.6"}
+openai = "^1.59.4"
+anthropic = "^0.42.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
